@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../domain/models/calendar_event.dart';
 import '../../data/calendar_repository.dart';
+import '../../../../shared/models/result.dart';
 
 part 'calendar_provider.g.dart';
 

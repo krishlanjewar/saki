@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../shared/widgets/saki_scaffold.dart';
 import '../../../../core/constants/app_strings.dart';
-import 'providers/expense_provider.dart';
+import '../providers/expense_provider.dart';
 
 class ExpenseScreen extends ConsumerWidget {
   const ExpenseScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final expenseState = ref.watch(expenseProvider);
+    final expenseState = ref.watch(expenseListProvider);
 
     return SakiScaffold(
       title: AppStrings.expenses,

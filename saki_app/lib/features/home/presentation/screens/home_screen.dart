@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../shared/widgets/saki_scaffold.dart';
 import '../../../../core/constants/app_strings.dart';
-import '../providers/home_provider.dart';
+import '../../providers/home_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});

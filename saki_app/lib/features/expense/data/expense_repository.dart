@@ -22,6 +22,6 @@ class ExpenseRepository implements IExpenseRepository {
 }
 
 @riverpod
-IExpenseRepository expenseRepository(ExpenseRepositoryRef ref) {
+IExpenseRepository expenseRepository(Ref ref) {
   return ExpenseRepository();
 }

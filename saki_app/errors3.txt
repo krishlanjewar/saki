@@ -1,0 +1,9 @@
+Analyzing saki_app...                                           
+
+   info - The import of 'package:flutter_riverpod/flutter_riverpod.dart' is unnecessary because all of the used elements are also provided by the import of 'package:riverpod_annotation/riverpod_annotation.dart' - lib\core\database\app_database.dart:2:8 - unnecessary_import
+   info - The import of 'package:flutter_riverpod/flutter_riverpod.dart' is unnecessary because all of the used elements are also provided by the import of 'package:riverpod_annotation/riverpod_annotation.dart' - lib\core\router\app_router.dart:4:8 - unnecessary_import
+   info - The import of 'package:flutter_riverpod/flutter_riverpod.dart' is unnecessary because all of the used elements are also provided by the import of 'package:riverpod_annotation/riverpod_annotation.dart' - lib\features\calendar\data\calendar_repository.dart:2:8 - unnecessary_import
+  error - Missing concrete implementations of '_$CalendarEvent.toJson', 'getter _$CalendarEvent.description', 'getter _$CalendarEvent.endTime', 'getter _$CalendarEvent.id', and 3 more - lib\features\calendar\domain\models\calendar_event.dart:8:7 - non_abstract_class_inherits_abstract_member
+   info - The import of 'package:flutter_riverpod/flutter_riverpod.dart' is unnecessary because all of the used elements are also provided by the import of 'package:riverpod_annotation/riverpod_annotation.dart' - lib\features\expense\data\expense_repository.dart:2:8 - unnecessary_import
+  error - Missing concrete implementations of '_$Expense.toJson', 'getter _$Expense.amount', 'getter _$Expense.category', 'getter _$Expense.date', and 2 more - lib\features\expense\domain\models\expense.dart:8:7 - non_abstract_class_inherits_abstract_member
+

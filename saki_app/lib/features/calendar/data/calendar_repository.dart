@@ -24,6 +24,6 @@ class CalendarRepository implements ICalendarRepository {
 }
 
 @riverpod
-ICalendarRepository calendarRepository(CalendarRepositoryRef ref) {
+ICalendarRepository calendarRepository(Ref ref) {
   return CalendarRepository();
 }

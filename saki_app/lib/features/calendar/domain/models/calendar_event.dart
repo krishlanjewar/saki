@@ -1,10 +1,13 @@
+// ignore_for_file: unused_element
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'calendar_event.freezed.dart';
 part 'calendar_event.g.dart';
 
 @freezed
-class CalendarEvent with _$CalendarEvent {
+abstract class CalendarEvent with _$CalendarEvent {
+  const CalendarEvent._();
+
   const factory CalendarEvent({
     required String id,
     required String title,

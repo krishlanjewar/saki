@@ -1,0 +1,12 @@
+Analyzing saki_app...                                           
+
+  error - Undefined class 'DatabaseRef' - lib\core\database\app_database.dart:17:22 - undefined_class
+  error - Undefined class 'AppRouterRef' - lib\core\router\app_router.dart:16:20 - undefined_class
+  error - Undefined class 'CalendarRepositoryRef' - lib\features\calendar\data\calendar_repository.dart:27:40 - undefined_class
+  error - Missing concrete implementations of '_$CalendarEvent.toJson', 'getter _$CalendarEvent.description', 'getter _$CalendarEvent.endTime', 'getter _$CalendarEvent.id', and 3 more - lib\features\calendar\domain\models\calendar_event.dart:7:7 - non_abstract_class_inherits_abstract_member
+  error - The method 'when' isn't defined for the type 'Result' - lib\features\calendar\presentation\providers\calendar_provider.dart:15:19 - undefined_method
+  error - Undefined class 'ExpenseRepositoryRef' - lib\features\expense\data\expense_repository.dart:25:38 - undefined_class
+  error - Missing concrete implementations of '_$Expense.toJson', 'getter _$Expense.amount', 'getter _$Expense.category', 'getter _$Expense.date', and 2 more - lib\features\expense\domain\models\expense.dart:7:7 - non_abstract_class_inherits_abstract_member
+  error - The method 'when' isn't defined for the type 'Result' - lib\features\expense\presentation\providers\expense_provider.dart:14:19 - undefined_method
+  error - Undefined name 'expenseProvider' - lib\features\expense\presentation\screens\expense_screen.dart:12:36 - undefined_identifier
+

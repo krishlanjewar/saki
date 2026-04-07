@@ -1,0 +1,46 @@
+Analyzing saki_app...                                           
+
+  error - Undefined name 'appRouterProvider' - lib\app.dart:11:32 - undefined_identifier
+  error - Target of URI hasn't been generated: 'package:saki_app/core/database/app_database.g.dart' - lib\core\database\app_database.dart:3:6 - uri_has_not_been_generated
+  error - Undefined class 'DatabaseRef' - lib\core\database\app_database.dart:17:22 - undefined_class
+  error - Target of URI hasn't been generated: 'package:saki_app/core/router/app_router.g.dart' - lib\core\router\app_router.dart:11:6 - uri_has_not_been_generated
+  error - Undefined class 'AppRouterRef' - lib\core\router\app_router.dart:16:20 - undefined_class
+  error - Target of URI hasn't been generated: 'package:saki_app/features/calendar/data/calendar_repository.g.dart' - lib\features\calendar\data\calendar_repository.dart:5:6 - uri_has_not_been_generated
+  error - Undefined class 'CalendarRepositoryRef' - lib\features\calendar\data\calendar_repository.dart:27:40 - undefined_class
+  error - Target of URI doesn't exist: 'package:saki_app/features/calendar/domain/models/calendar_event.freezed.dart' - lib\features\calendar\domain\models\calendar_event.dart:3:6 - uri_does_not_exist
+  error - Target of URI hasn't been generated: 'package:saki_app/features/calendar/domain/models/calendar_event.g.dart' - lib\features\calendar\domain\models\calendar_event.dart:4:6 - uri_has_not_been_generated
+  error - The name '_CalendarEvent' isn't a type and can't be used in a redirected constructor - lib\features\calendar\domain\models\calendar_event.dart:15:8 - redirect_to_non_class
+  error - The method '_$CalendarEventFromJson' isn't defined for the type 'CalendarEvent' - lib\features\calendar\domain\models\calendar_event.dart:18:7 - undefined_method
+  error - Target of URI hasn't been generated: 'package:saki_app/features/calendar/presentation/providers/calendar_provider.g.dart' - lib\features\calendar\presentation\providers\calendar_provider.dart:5:6 - uri_has_not_been_generated
+warning - The method doesn't override an inherited method - lib\features\calendar\presentation\providers\calendar_provider.dart:10:33 - override_on_non_overriding_member
+  error - Undefined name 'ref' - lib\features\calendar\presentation\providers\calendar_provider.dart:11:18 - undefined_identifier
+  error - Undefined name 'calendarRepositoryProvider' - lib\features\calendar\presentation\providers\calendar_provider.dart:11:28 - undefined_identifier
+  error - Target of URI doesn't exist: 'providers/calendar_provider.dart' - lib\features\calendar\presentation\screens\calendar_screen.dart:5:8 - uri_does_not_exist
+  error - Undefined name 'calendarProvider' - lib\features\calendar\presentation\screens\calendar_screen.dart:12:37 - undefined_identifier
+  error - Target of URI hasn't been generated: 'package:saki_app/features/expense/data/expense_repository.g.dart' - lib\features\expense\data\expense_repository.dart:5:6 - uri_has_not_been_generated
+  error - Undefined class 'ExpenseRepositoryRef' - lib\features\expense\data\expense_repository.dart:25:38 - undefined_class
+  error - Target of URI doesn't exist: 'package:saki_app/features/expense/domain/models/expense.freezed.dart' - lib\features\expense\domain\models\expense.dart:3:6 - uri_does_not_exist
+  error - Target of URI hasn't been generated: 'package:saki_app/features/expense/domain/models/expense.g.dart' - lib\features\expense\domain\models\expense.dart:4:6 - uri_has_not_been_generated
+  error - The name '_Expense' isn't a type and can't be used in a redirected constructor - lib\features\expense\domain\models\expense.dart:14:8 - redirect_to_non_class
+  error - The method '_$ExpenseFromJson' isn't defined for the type 'Expense' - lib\features\expense\domain\models\expense.dart:16:58 - undefined_method
+  error - Target of URI hasn't been generated: 'package:saki_app/features/expense/presentation/providers/expense_provider.g.dart' - lib\features\expense\presentation\providers\expense_provider.dart:5:6 - uri_has_not_been_generated
+warning - The method doesn't override an inherited method - lib\features\expense\presentation\providers\expense_provider.dart:10:27 - override_on_non_overriding_member
+  error - Undefined name 'ref' - lib\features\expense\presentation\providers\expense_provider.dart:11:18 - undefined_identifier
+  error - Undefined name 'expenseRepositoryProvider' - lib\features\expense\presentation\providers\expense_provider.dart:11:28 - undefined_identifier
+  error - Target of URI doesn't exist: 'providers/expense_provider.dart' - lib\features\expense\presentation\screens\expense_screen.dart:5:8 - uri_does_not_exist
+  error - Undefined name 'expenseProvider' - lib\features\expense\presentation\screens\expense_screen.dart:12:36 - undefined_identifier
+  error - Target of URI doesn't exist: '../providers/home_provider.dart' - lib\features\home\presentation\screens\home_screen.dart:5:8 - uri_does_not_exist
+  error - Undefined name 'homeProvider' - lib\features\home\presentation\screens\home_screen.dart:12:33 - undefined_identifier
+  error - Target of URI hasn't been generated: 'package:saki_app/features/home/providers/home_provider.g.dart' - lib\features\home\providers\home_provider.dart:3:6 - uri_has_not_been_generated
+warning - The method doesn't override an inherited method - lib\features\home\providers\home_provider.dart:8:20 - override_on_non_overriding_member
+  error - Undefined name 'databaseProvider' - lib\main.dart:16:9 - undefined_identifier
+  error - Target of URI doesn't exist: 'package:saki_app/shared/models/result.freezed.dart' - lib\shared\models\result.dart:3:6 - uri_does_not_exist
+  error - Classes can only mix in mixins and classes - lib\shared\models\result.dart:6:25 - mixin_of_non_class
+  error - The name 'Success' isn't a type and can't be used in a redirected constructor - lib\shared\models\result.dart:7:42 - redirect_to_non_class
+  error - The name 'Failure' isn't a type and can't be used in a redirected constructor - lib\shared\models\result.dart:8:43 - redirect_to_non_class
+  error - The name 'Success' isn't defined, so it can't be used in an 'is' expression - lib\shared\models\result.dart:13:33 - type_test_with_undefined_name
+  error - The name 'Failure' isn't defined, so it can't be used in an 'is' expression - lib\shared\models\result.dart:14:33 - type_test_with_undefined_name
+  error - The method 'when' isn't defined for the type 'Result' - lib\shared\models\result.dart:16:24 - undefined_method
+  error - The method 'when' isn't defined for the type 'Result' - lib\shared\models\result.dart:21:25 - undefined_method
+  error - The name 'MyApp' isn't a class - test\widget_test.dart:16:35 - creation_with_non_type
+

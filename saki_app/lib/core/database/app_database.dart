@@ -14,6 +14,6 @@ class AppDatabase {
 }
 
 @Riverpod(keepAlive: true)
-AppDatabase database(DatabaseRef ref) {
+AppDatabase database(Ref ref) {
   return AppDatabase.instance;
 }

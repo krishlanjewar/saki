@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../domain/models/expense.dart';
 import '../../data/expense_repository.dart';
+import '../../../../shared/models/result.dart';
 
 part 'expense_provider.g.dart';
 

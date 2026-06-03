@@ -4,7 +4,9 @@ import '../../domain/models/expense.dart';
 import '../../domain/models/transaction.dart';
 import '../../domain/models/investment_category.dart';
 import '../../data/expense_repository.dart';
+import '../../../../shared/models/result.dart';
 
+part 'expense_provider.freezed.dart';
 part 'expense_provider.g.dart';
 
 // ---------------------------------------------------------------------------
@@ -13,7 +15,7 @@ part 'expense_provider.g.dart';
 
 /// Holds the from/to date filter applied to the transaction list.
 @freezed
-class DateRangeFilter with _$DateRangeFilter {
+abstract class DateRangeFilter with _$DateRangeFilter {
   const factory DateRangeFilter({
     DateTime? from,
     DateTime? to,
@@ -116,7 +118,7 @@ Future<({List<double> debits, List<double> credits, List<String> labels})>
     trendData(Ref ref) async {
   final txns = await ref.watch(filteredTransactionsProvider.future);
   if (txns.isEmpty) {
-    return (debits: [], credits: [], labels: []);
+    return (debits: <double>[], credits: <double>[], labels: <String>[]);
   }
 
   // Group by date (keep only the last 10 unique dates).

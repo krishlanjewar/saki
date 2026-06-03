@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../../core/database/app_database.dart';
 import '../../../../shared/models/result.dart';
 import '../domain/models/expense.dart';
 import '../domain/models/transaction.dart';
@@ -22,7 +22,10 @@ abstract class IExpenseRepository {
 }
 
 class ExpenseRepository implements IExpenseRepository {
+  final AppDatabase _db;
   List<Transaction>? _transactions;
+
+  ExpenseRepository(this._db);
 
   // NOTE: Initial mock data that mirrors the bank statements, loaded if no saved data exists.
   static final List<Transaction> _mockTransactions = [
@@ -111,26 +114,24 @@ class ExpenseRepository implements IExpenseRepository {
   Future<void> _initIfNeeded() async {
     if (_transactions != null) return;
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final dataStr = prefs.getString('saki_transactions');
+      final dataStr = await _db.getString('saki_transactions');
       if (dataStr != null) {
         final List<dynamic> jsonList = jsonDecode(dataStr);
         _transactions = jsonList.map((item) => Transaction.fromJson(item)).toList();
       } else {
         _transactions = List<Transaction>.from(_mockTransactions);
-        await _saveToPrefs(prefs);
+        await _saveToDb();
       }
     } catch (e) {
       _transactions = List<Transaction>.from(_mockTransactions);
     }
   }
 
-  Future<void> _saveToPrefs([SharedPreferences? prefsInstance]) async {
+  Future<void> _saveToDb() async {
     if (_transactions == null) return;
     try {
-      final prefs = prefsInstance ?? await SharedPreferences.getInstance();
       final dataStr = jsonEncode(_transactions!.map((t) => t.toJson()).toList());
-      await prefs.setString('saki_transactions', dataStr);
+      await _db.putString('saki_transactions', dataStr);
     } catch (e) {
       // Suppress or log error
     }
@@ -173,7 +174,7 @@ class ExpenseRepository implements IExpenseRepository {
   Future<Result<Transaction, String>> addTransaction(Transaction transaction) async {
     await _initIfNeeded();
     _transactions!.insert(0, transaction);
-    await _saveToPrefs();
+    await _saveToDb();
     return Result.success(transaction);
   }
 
@@ -183,7 +184,7 @@ class ExpenseRepository implements IExpenseRepository {
     final initialLength = _transactions!.length;
     _transactions!.removeWhere((t) => t.id == id);
     if (_transactions!.length < initialLength) {
-      await _saveToPrefs();
+      await _saveToDb();
       return const Result.success(true);
     }
     return const Result.failure('Transaction not found');
@@ -247,5 +248,5 @@ class ExpenseRepository implements IExpenseRepository {
 
 @riverpod
 IExpenseRepository expenseRepository(Ref ref) {
-  return ExpenseRepository();
+  return ExpenseRepository(ref.watch(databaseProvider));
 }

@@ -54,4 +54,4 @@ final class ExpenseRepositoryProvider
   }
 }
 
-String _$expenseRepositoryHash() => r'385d5881f88e7b817a2ec190896ffb69b0d132bf';
+String _$expenseRepositoryHash() => r'1b7ac3a397f7e2c9df5b64b5b47545162baf45eb';

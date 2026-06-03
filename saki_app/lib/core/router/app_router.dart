@@ -7,6 +7,9 @@ import '../../features/calendar/presentation/screens/calendar_screen.dart';
 import '../../features/expense/presentation/screens/expense_screen.dart';
 import '../../features/goals/presentation/screens/goals_screen.dart';
 import '../../features/study_timer/presentation/screens/study_timer_screen.dart';
+import '../../features/journal/presentation/screens/journal_dashboard_screen.dart';
+import '../../features/journal/presentation/screens/journal_entry_screen.dart';
+
 import '../../shared/widgets/saki_scaffold.dart';
 
 part 'app_router.g.dart';
@@ -42,7 +45,20 @@ GoRouter appRouter(Ref ref) {
       ),
       GoRoute(
         path: '/journal',
-        builder: (context, state) => const _PlaceholderScreen(title: 'Journal'),
+        builder: (context, state) => const JournalDashboardScreen(),
+        routes: [
+          GoRoute(
+            path: 'new',
+            builder: (context, state) => const JournalEntryScreen(),
+          ),
+          GoRoute(
+            path: 'entry/:id',
+            builder: (context, state) {
+              final id = state.pathParameters['id'];
+              return JournalEntryScreen(entryId: id);
+            },
+          ),
+        ],
       ),
       GoRoute(
         path: '/design',

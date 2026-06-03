@@ -53,4 +53,4 @@ final class GoalsRepositoryProvider
   }
 }
 
-String _$goalsRepositoryHash() => r'a4e7a1c55b9226567fa11c180d9c429817b26dfa';
+String _$goalsRepositoryHash() => r'c995d83b18115019400bf933a901c1758094b463';

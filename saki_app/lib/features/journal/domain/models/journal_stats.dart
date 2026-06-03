@@ -25,13 +25,6 @@ class JournalStatsCalculator {
     final sorted = List<JournalEntry>.from(entries)..sort((a, b) => b.date.compareTo(a.date));
 
     // Calculate Streak
-    var day = DateTime.now();
-    for (int i = 0; i < sorted.length; i++) {
-      // Just a simple streak calculation (needs to handle days correctly)
-      // We will count a day as having an entry if any entry exists for that date string
-      // Let's simplify and just say if the latest is today/yesterday and chains back
-    }
-    
     // Improved streak logic
     final uniqueDates = sorted.map((e) => DateTime(e.date.year, e.date.month, e.date.day)).toSet();
     DateTime checkDay = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);

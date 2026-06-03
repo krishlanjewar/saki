@@ -55,7 +55,7 @@ class ScrapbookCard extends StatelessWidget {
               ),
             ),
           ),
-          if (tapes != null) ...tapes!,
+          ...?tapes,
         ],
       ),
     );
@@ -75,7 +75,7 @@ class ScrapbookCardPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
     
     final shadowPaint = Paint()
-      ..color = Colors.black.withOpacity(0.12)
+      ..color = Colors.black.withValues(alpha: 0.12)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
 
     final path = Path();
@@ -115,7 +115,7 @@ class ScrapbookCardPainter extends CustomPainter {
         ..lineTo(size.width, 30)
         ..close();
       final foldPaint = Paint()
-        ..color = Colors.black.withOpacity(0.1)
+        ..color = Colors.black.withValues(alpha: 0.1)
         ..style = PaintingStyle.fill;
       canvas.drawPath(foldPath, foldPaint);
     }
@@ -156,10 +156,10 @@ class TapeDecor extends StatelessWidget {
               width: 80,
               height: 25,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.85),
+                color: color.withValues(alpha: 0.85),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 2,
                     offset: const Offset(1, 2),
                   ),
@@ -180,7 +180,7 @@ class StripedTapePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withOpacity(0.3)
+      ..color = Colors.white.withValues(alpha: 0.3)
       ..strokeWidth = 3
       ..style = PaintingStyle.stroke;
     
@@ -220,7 +220,7 @@ class StickyNote extends StatelessWidget {
         color: color,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),
+            color: Colors.black.withValues(alpha: 0.15),
             offset: const Offset(2, 4),
             blurRadius: 4,
           ),
@@ -258,7 +258,7 @@ class StickyNote extends StatelessWidget {
           if (footer != null)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               child: Text(
                 footer!,
                 style: GoogleFonts.kalam(

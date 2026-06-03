@@ -29,7 +29,7 @@ class StreakCard extends ConsumerWidget {
               value: streakAsync.when(
                 data: (s) => '$s day${s == 1 ? '' : 's'}',
                 loading: () => '…',
-                error: (_, __) => '0 days',
+                error: (_, _) => '0 days',
               ),
               valueColor: const Color(0xFFFF6B35),
             ),
@@ -45,7 +45,7 @@ class StreakCard extends ConsumerWidget {
                 value: '…',
                 valueColor: Color(0xFF66BB6A),
               ),
-              error: (_, __) => const _StatCell(
+              error: (_, _) => const _StatCell(
                 icon: '📊',
                 label: 'This Week',
                 value: '0%',
@@ -74,7 +74,7 @@ class StreakCard extends ConsumerWidget {
                 value: '…',
                 valueColor: Color(0xFFFFD700),
               ),
-              error: (_, __) => const _StatCell(
+              error: (_, _) => const _StatCell(
                 icon: '⭐',
                 label: 'Best Day',
                 value: '0',

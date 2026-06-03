@@ -15,6 +15,9 @@ abstract class CalendarEvent with _$CalendarEvent {
     required DateTime endTime,
     String? description,
     @Default(false) bool isAllDay,
+    @Default(false) bool isCompleted,
+    @Default('plan') String category,
+    double? amount,
   }) = _CalendarEvent;
 
   factory CalendarEvent.fromJson(Map<String, dynamic> json) =>

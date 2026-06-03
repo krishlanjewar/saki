@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import '../../../../shared/widgets/saki_drawer.dart';
+import '../providers/calendar_state_providers.dart';
 import '../widgets/scrapbook_widgets.dart';
 import '../widgets/analysis_chart.dart';
 import '../widgets/scrapbook_calendar_widget.dart';
@@ -11,219 +13,20 @@ class CalendarScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isWide = screenWidth > 800;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF3EEDF), // paper like background
       drawer: const SakiDrawer(),
       body: SafeArea(
         child: Stack(
           children: [
-            // A subtle texture overlay could go here in a real app
-            
             SingleChildScrollView(
               padding: const EdgeInsets.only(top: 80, bottom: 40),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Calendar Component
-                  ScrapbookCalendarWidget(focusedDate: DateTime.now()),
-                  
-                  const SizedBox(height: 20),
-                  
-                  // Plans Section
-                  ScrapbookCard(
-                    color: const Color(0xFF67B2A9),
-                    title: 'Plans',
-                    tapes: [
-                      TapeDecor(
-                        alignment: Alignment.topLeft,
-                        angle: -0.2,
-                        color: const Color(0xFFFA9A76),
-                        striped: true,
-                        offsetDx: -10,
-                        offsetDy: -10,
-                      ),
-                      TapeDecor(
-                        alignment: Alignment.topRight,
-                        angle: 0.2,
-                        color: const Color(0xFFFA9A76),
-                        striped: true,
-                        offsetDx: 10,
-                        offsetDy: -10,
-                      ),
-                    ],
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          StickyNote(
-                            color: const Color(0xFFF7B9C4),
-                            title: 'Task: Team Meeting',
-                            subtitle: '22/5/26',
-                            footer: 'Review project roadmap',
-                          ),
-                          StickyNote(
-                            color: const Color(0xFFE2E2E2), // white-ish
-                            title: 'Task: Client Call',
-                            subtitle: '22/5/26',
-                            footer: 'Discuss feedback',
-                          ),
-                          StickyNote(
-                            color: const Color(0xFFF7B9C4),
-                            title: 'Task: Brainstorming',
-                            subtitle: '22/5/26',
-                            footer: 'Generate new ideas',
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  // Analysis Section
-                  ScrapbookCard(
-                    color: const Color(0xFFF29B4F),
-                    title: 'Analysis',
-                    hasFold: true,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  // DONE
-                                  Expanded(
-                                    child: StickyNote(
-                                      color: const Color(0xFFAFD59D),
-                                      title: 'Task - DONE:',
-                                      subtitle: 'Submit Q1 review\nremark -',
-                                    ),
-                                  ),
-                                  // Remain
-                                  Expanded(
-                                    child: StickyNote(
-                                      color: const Color(0xFFF0756B),
-                                      title: 'Task - Remain',
-                                      subtitle: 'Task body\nreason-',
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: StickyNote(
-                                      color: const Color(0xFFF0756B),
-                                      title: 'Task - Remain',
-                                      subtitle: 'Task body\nreason-',
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: StickyNote(
-                                      color: const Color(0xFFAFD59D),
-                                      title: 'Task - DONE:',
-                                      subtitle: 'Submit Q1 review\nremark -',
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Circular Progress
-                        const Padding(
-                          padding: EdgeInsets.only(top: 20, right: 10),
-                          child: AnalysisChart(percentage: 0.4),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Investment Section
-                  ScrapbookCard(
-                    color: const Color(0xFFD4B144),
-                    title: 'Investment',
-                    titleTrailing: Text(
-                      '1000000 BALANCE',
-                      style: GoogleFonts.kalam(fontSize: 22, color: Colors.black87),
-                    ),
-                    tapes: [
-                      TapeDecor(
-                         alignment: Alignment.topLeft,
-                         angle: -0.15,
-                         color: const Color(0xFFB19B4B),
-                         offsetDx: -10,
-                         offsetDy: -10,
-                      ),
-                      TapeDecor(
-                         alignment: Alignment.topRight,
-                         angle: 0.15,
-                         color: const Color(0xFFB19B4B),
-                         offsetDx: 10,
-                         offsetDy: -10,
-                      ),
-                    ],
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                         children: [
-                            StickyNote(
-                               color: const Color(0xFFAFD59D),
-                               title: 'Investment - ₹ 5000',
-                               subtitle: 'Stocks purchase',
-                            ),
-                            StickyNote(
-                               color: const Color(0xFFAFD59D),
-                               title: 'Investment - ₹ 5000',
-                               subtitle: 'Mutual Fund',
-                            ),
-                            StickyNote(
-                               color: const Color(0xFFAFD59D),
-                               title: 'Investment - ₹ 5000',
-                               subtitle: 'Savings bond',
-                            ),
-                         ],
-                      ),
-                    ),
-                  ),
-
-                  // Expenses Section
-                  ScrapbookCard(
-                     color: const Color(0xFFE4A4A2),
-                     title: 'Expenses',
-                     titleTrailing: Text(
-                       '1000 Balance',
-                       style: GoogleFonts.kalam(fontSize: 22, color: Colors.black87),
-                     ),
-                     child: SingleChildScrollView(
-                       scrollDirection: Axis.horizontal,
-                       child: Row(
-                         children: [
-                            StickyNote(
-                               color: const Color(0xFFF0756B),
-                               title: 'Expense: Lunch',
-                               subtitle: 'Team outing',
-                            ),
-                            StickyNote(
-                               color: const Color(0xFFF0756B),
-                               title: 'Expense: Transport',
-                               subtitle: 'Taxi fare',
-                            ),
-                            StickyNote(
-                               color: const Color(0xFFF0756B),
-                               title: 'Expense: Supplies',
-                               subtitle: 'Office stationery',
-                            ),
-                         ],
-                       ),
-                     ),
-                  ),
-                  
-                ],
-              ),
+              child: isWide ? const _WideLayout() : const _NarrowLayout(),
             ),
-            
+
             // Hamburger Menu Icon (floating on top left)
             Positioned(
               top: 16,
@@ -232,16 +35,349 @@ class CalendarScreen extends ConsumerWidget {
                 builder: (BuildContext iconContext) {
                   return IconButton(
                     icon: const Icon(Icons.menu, size: 36, color: Colors.black87),
+                    tooltip: 'Open navigation drawer',
                     onPressed: () {
                       Scaffold.of(iconContext).openDrawer();
                     },
                   );
-                }
+                },
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _WideLayout extends StatelessWidget {
+  const _WideLayout();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 5,
+          child: Column(
+            children: [
+              ScrapbookCalendarWidget(),
+              SizedBox(height: 8),
+              _AnalysisCard(),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 6,
+          child: Column(
+            children: [
+              _PlansCard(),
+              _InvestmentCard(),
+              _ExpensesCard(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _NarrowLayout extends StatelessWidget {
+  const _NarrowLayout();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ScrapbookCalendarWidget(),
+        SizedBox(height: 8),
+        _PlansCard(),
+        _AnalysisCard(),
+        _InvestmentCard(),
+        _ExpensesCard(),
+      ],
+    );
+  }
+}
+
+class _PlansCard extends ConsumerWidget {
+  const _PlansCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final eventsAsync = ref.watch(eventsForSelectedDateProvider);
+
+    return ScrapbookCard(
+      color: const Color(0xFF67B2A9),
+      title: 'Plans',
+      tapes: [
+        TapeDecor(
+          alignment: Alignment.topLeft,
+          angle: -0.2,
+          color: const Color(0xFFFA9A76),
+          striped: true,
+          offsetDx: -10,
+          offsetDy: -10,
+        ),
+        TapeDecor(
+          alignment: Alignment.topRight,
+          angle: 0.2,
+          color: const Color(0xFFFA9A76),
+          striped: true,
+          offsetDx: 10,
+          offsetDy: -10,
+        ),
+      ],
+      child: eventsAsync.when(
+        data: (events) {
+          final plans = events.where((e) => e.category == 'plan').toList();
+
+          if (plans.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Text(
+                'No plans scheduled for this date.',
+                style: GoogleFonts.kalam(
+                  fontSize: 16,
+                  color: Colors.black54,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            );
+          }
+
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: plans.map((plan) {
+                return StickyNote(
+                  color: const Color(0xFFF7B9C4),
+                  title: plan.title,
+                  subtitle: DateFormat('h:mm a').format(plan.startTime),
+                  footer: plan.description,
+                );
+              }).toList(),
+            ),
+          );
+        },
+        loading: () => const Center(
+          child: Padding(
+            padding: EdgeInsets.all(20.0),
+            child: CircularProgressIndicator(color: Colors.black54),
+          ),
+        ),
+        error: (err, stack) => Center(
+          child: Text(
+            'Error loading plans',
+            style: GoogleFonts.kalam(color: Colors.red),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AnalysisCard extends ConsumerWidget {
+  const _AnalysisCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final eventsAsync = ref.watch(eventsForSelectedDateProvider);
+
+    return ScrapbookCard(
+      color: const Color(0xFFF29B4F),
+      title: 'Analysis',
+      hasFold: true,
+      child: eventsAsync.when(
+        data: (events) {
+          final tasks = events.where((e) => e.category == 'task').toList();
+          final completed = tasks.where((t) => t.isCompleted).toList();
+          final remaining = tasks.where((t) => !t.isCompleted).toList();
+
+          final total = tasks.length;
+          final percentage = total == 0 ? 0.0 : completed.length / total;
+
+          if (tasks.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Text(
+                'No tasks to analyze for this date.',
+                style: GoogleFonts.kalam(
+                  fontSize: 16,
+                  color: Colors.black54,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            );
+          }
+
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    ...completed.map((t) => Container(
+                          constraints: const BoxConstraints(maxWidth: 130),
+                          child: StickyNote(
+                            color: const Color(0xFFAFD59D),
+                            title: 'Task - DONE:',
+                            subtitle: '${t.title}\n${t.description ?? ""}',
+                          ),
+                        )),
+                    ...remaining.map((t) => Container(
+                          constraints: const BoxConstraints(maxWidth: 130),
+                          child: StickyNote(
+                            color: const Color(0xFFF0756B),
+                            title: 'Task - Remain',
+                            subtitle: '${t.title}\n${t.description ?? ""}',
+                          ),
+                        )),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10, left: 8),
+                child: AnalysisChart(percentage: percentage),
+              ),
+            ],
+          );
+        },
+        loading: () => const Center(
+          child: Padding(
+            padding: EdgeInsets.all(20.0),
+            child: CircularProgressIndicator(color: Colors.black54),
+          ),
+        ),
+        error: (err, stack) => Center(
+          child: Text(
+            'Error loading analysis',
+            style: GoogleFonts.kalam(color: Colors.red),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _InvestmentCard extends ConsumerWidget {
+  const _InvestmentCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final eventsAsync = ref.watch(eventsForSelectedDateProvider);
+
+    return eventsAsync.when(
+      data: (events) {
+        final investments = events.where((e) => e.category == 'investment').toList();
+        final totalInvested = investments.fold<double>(0, (sum, item) => sum + (item.amount ?? 0));
+
+        return ScrapbookCard(
+          color: const Color(0xFFD4B144),
+          title: 'Investment',
+          titleTrailing: Text(
+            '₹ ${totalInvested.toStringAsFixed(0)} INVESTED',
+            style: GoogleFonts.kalam(fontSize: 20, color: Colors.black87, fontWeight: FontWeight.bold),
+          ),
+          tapes: [
+            TapeDecor(
+              alignment: Alignment.topLeft,
+              angle: -0.15,
+              color: const Color(0xFFB19B4B),
+              offsetDx: -10,
+              offsetDy: -10,
+            ),
+            TapeDecor(
+              alignment: Alignment.topRight,
+              angle: 0.15,
+              color: const Color(0xFFB19B4B),
+              offsetDx: 10,
+              offsetDy: -10,
+            ),
+          ],
+          child: investments.isEmpty
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    'No investments recorded for this date.',
+                    style: GoogleFonts.kalam(
+                      fontSize: 16,
+                      color: Colors.black54,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                )
+              : SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: investments.map((inv) {
+                      return StickyNote(
+                        color: const Color(0xFFAFD59D),
+                        title: 'Investment - ₹ ${inv.amount?.toStringAsFixed(0)}',
+                        subtitle: inv.title,
+                      );
+                    }).toList(),
+                  ),
+                ),
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (err, stack) => const SizedBox.shrink(),
+    );
+  }
+}
+
+class _ExpensesCard extends ConsumerWidget {
+  const _ExpensesCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final eventsAsync = ref.watch(eventsForSelectedDateProvider);
+
+    return eventsAsync.when(
+      data: (events) {
+        final expenses = events.where((e) => e.category == 'expense').toList();
+        final totalExpenses = expenses.fold<double>(0, (sum, item) => sum + (item.amount ?? 0));
+
+        return ScrapbookCard(
+          color: const Color(0xFFE4A4A2),
+          title: 'Expenses',
+          titleTrailing: Text(
+            '₹ ${totalExpenses.toStringAsFixed(0)} TOTAL',
+            style: GoogleFonts.kalam(fontSize: 20, color: Colors.black87, fontWeight: FontWeight.bold),
+          ),
+          child: expenses.isEmpty
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Text(
+                    'No expenses recorded for this date.',
+                    style: GoogleFonts.kalam(
+                      fontSize: 16,
+                      color: Colors.black54,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                )
+              : SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: expenses.map((exp) {
+                      return StickyNote(
+                        color: const Color(0xFFF0756B),
+                        title: 'Expense: ${exp.title}',
+                        subtitle: '${exp.description ?? ""}\n₹ ${exp.amount?.toStringAsFixed(0)}',
+                      );
+                    }).toList(),
+                  ),
+                ),
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (err, stack) => const SizedBox.shrink(),
     );
   }
 }

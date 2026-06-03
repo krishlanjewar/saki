@@ -14,6 +14,9 @@ _CalendarEvent _$CalendarEventFromJson(Map<String, dynamic> json) =>
       endTime: DateTime.parse(json['endTime'] as String),
       description: json['description'] as String?,
       isAllDay: json['isAllDay'] as bool? ?? false,
+      isCompleted: json['isCompleted'] as bool? ?? false,
+      category: json['category'] as String? ?? 'plan',
+      amount: (json['amount'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$CalendarEventToJson(_CalendarEvent instance) =>
@@ -24,4 +27,7 @@ Map<String, dynamic> _$CalendarEventToJson(_CalendarEvent instance) =>
       'endTime': instance.endTime.toIso8601String(),
       'description': instance.description,
       'isAllDay': instance.isAllDay,
+      'isCompleted': instance.isCompleted,
+      'category': instance.category,
+      'amount': instance.amount,
     };

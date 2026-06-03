@@ -21,6 +21,8 @@ abstract class Transaction with _$Transaction {
     required DateTime date,
     required TransactionType type,
     @Default(ExpenseCategory.others) ExpenseCategory category,
+    @Default(false) bool isInvestment,
+    String? investmentCategory,
   }) = _Transaction;
 
   factory Transaction.fromJson(Map<String, dynamic> json) =>

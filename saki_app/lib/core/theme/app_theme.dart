@@ -47,7 +47,7 @@ class AppTheme {
         centerTitle: false,
         iconTheme: IconThemeData(color: AppColors.textPrimaryDark),
         titleTextStyle: TextStyle(
-          color: AppColors.textPrimaryDark,
+          color: Color.fromARGB(0, 255, 255, 255),
           fontSize: 20,
           fontWeight: FontWeight.w600,
         ),

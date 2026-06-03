@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../shared/models/result.dart';
 import '../domain/models/expense.dart';
 import '../domain/models/transaction.dart';
@@ -13,17 +15,20 @@ abstract class IExpenseRepository {
     DateTime? from,
     DateTime? to,
   });
+  Future<Result<Transaction, String>> addTransaction(Transaction transaction);
+  Future<Result<bool, String>> deleteTransaction(String id);
   Future<Result<InvestmentSummary, String>> getInvestmentSummary();
   Future<Result<ExpenseSummary, String>> getExpenseSummary();
 }
 
 class ExpenseRepository implements IExpenseRepository {
-  // NOTE: Mock data mirrors the bank statement shown in the UI design.
+  List<Transaction>? _transactions;
+
+  // NOTE: Initial mock data that mirrors the bank statements, loaded if no saved data exists.
   static final List<Transaction> _mockTransactions = [
     Transaction(
       id: 't1',
-      description:
-          'TRANSFER TO\n4897696162090 -\nUPI/DR/315533224412\n/JIBRIL\nA/PYTM/paytmqr281/Payme',
+      description: 'UPI/DR/315533224412/JIBRIL A/PYTM/paytmqr281/Payme',
       amount: 20.0,
       date: DateTime(2023, 6, 4),
       type: TransactionType.debit,
@@ -31,7 +36,7 @@ class ExpenseRepository implements IExpenseRepository {
     ),
     Transaction(
       id: 't2',
-      description: '- CMP MANDATE DEBIT\nBajaj Finance Ltd - SI',
+      description: 'CMP MANDATE DEBIT Bajaj Finance Ltd - SI',
       amount: 1578.0,
       date: DateTime(2023, 6, 3),
       type: TransactionType.debit,
@@ -39,8 +44,7 @@ class ExpenseRepository implements IExpenseRepository {
     ),
     Transaction(
       id: 't3',
-      description:
-          '-Mandate fail Chrg txn\ndt.02062023-Bajaj\nFinance',
+      description: 'Mandate fail Chrg txn dt.02062023-Bajaj Finance',
       amount: 295.0,
       date: DateTime(2023, 6, 3),
       type: TransactionType.debit,
@@ -48,8 +52,7 @@ class ExpenseRepository implements IExpenseRepository {
     ),
     Transaction(
       id: 't4',
-      description:
-          'TRANSFER TO\n4897695162091 -\nUPI/DR/315473195844\n/PayU\nPay/INDB/bajafinan/UP\nI T',
+      description: 'UPI/DR/315473195844/PayU Pay/INDB/bajafinan/UPI T',
       amount: 1578.0,
       date: DateTime(2023, 6, 3),
       type: TransactionType.debit,
@@ -57,8 +60,7 @@ class ExpenseRepository implements IExpenseRepository {
     ),
     Transaction(
       id: 't5',
-      description:
-          'TRANSFER FROM\n4897736162097 -\nUPI/CR/351979305819\n/AKASH\nKU/PUNB/8859571259\n/Payme',
+      description: 'UPI/CR/351979305819/AKASH KU/PUNB/8859571259/Payme',
       amount: 3250.0,
       date: DateTime(2023, 6, 2),
       type: TransactionType.credit,
@@ -106,6 +108,34 @@ class ExpenseRepository implements IExpenseRepository {
     ),
   ];
 
+  Future<void> _initIfNeeded() async {
+    if (_transactions != null) return;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final dataStr = prefs.getString('saki_transactions');
+      if (dataStr != null) {
+        final List<dynamic> jsonList = jsonDecode(dataStr);
+        _transactions = jsonList.map((item) => Transaction.fromJson(item)).toList();
+      } else {
+        _transactions = List<Transaction>.from(_mockTransactions);
+        await _saveToPrefs(prefs);
+      }
+    } catch (e) {
+      _transactions = List<Transaction>.from(_mockTransactions);
+    }
+  }
+
+  Future<void> _saveToPrefs([SharedPreferences? prefsInstance]) async {
+    if (_transactions == null) return;
+    try {
+      final prefs = prefsInstance ?? await SharedPreferences.getInstance();
+      final dataStr = jsonEncode(_transactions!.map((t) => t.toJson()).toList());
+      await prefs.setString('saki_transactions', dataStr);
+    } catch (e) {
+      // Suppress or log error
+    }
+  }
+
   @override
   Future<Result<List<Expense>, String>> getExpenses() async {
     return const Result.success([]);
@@ -121,16 +151,18 @@ class ExpenseRepository implements IExpenseRepository {
     DateTime? from,
     DateTime? to,
   }) async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    var result = List<Transaction>.from(_mockTransactions);
+    await _initIfNeeded();
+    var result = List<Transaction>.from(_transactions!);
     if (from != null) {
+      final normalizedFrom = DateTime(from.year, from.month, from.day);
       result = result
-          .where((t) => t.date.isAfter(from.subtract(const Duration(days: 1))))
+          .where((t) => t.date.isAfter(normalizedFrom.subtract(const Duration(seconds: 1))))
           .toList();
     }
     if (to != null) {
+      final normalizedTo = DateTime(to.year, to.month, to.day, 23, 59, 59);
       result = result
-          .where((t) => t.date.isBefore(to.add(const Duration(days: 1))))
+          .where((t) => t.date.isBefore(normalizedTo.add(const Duration(seconds: 1))))
           .toList();
     }
     result.sort((a, b) => b.date.compareTo(a.date));
@@ -138,31 +170,78 @@ class ExpenseRepository implements IExpenseRepository {
   }
 
   @override
+  Future<Result<Transaction, String>> addTransaction(Transaction transaction) async {
+    await _initIfNeeded();
+    _transactions!.insert(0, transaction);
+    await _saveToPrefs();
+    return Result.success(transaction);
+  }
+
+  @override
+  Future<Result<bool, String>> deleteTransaction(String id) async {
+    await _initIfNeeded();
+    final initialLength = _transactions!.length;
+    _transactions!.removeWhere((t) => t.id == id);
+    if (_transactions!.length < initialLength) {
+      await _saveToPrefs();
+      return const Result.success(true);
+    }
+    return const Result.failure('Transaction not found');
+  }
+
+  @override
   Future<Result<InvestmentSummary, String>> getInvestmentSummary() async {
-    return const Result.success(
-      InvestmentSummary(
-        totalBalance: 1000000,
-        categories: [
-          InvestmentCategory(label: 'Stocks purchase', amount: 5000),
-          InvestmentCategory(label: 'Mutual Fund', amount: 5000),
-          InvestmentCategory(label: 'Savings bond', amount: 5000),
-        ],
-      ),
-    );
+    await _initIfNeeded();
+    final investments = _transactions!.where((t) => t.isInvestment).toList();
+    final total = investments.fold<double>(0, (sum, t) => sum + t.amount);
+
+    final Map<String, double> grouped = {};
+    for (final t in investments) {
+      final key = t.investmentCategory ?? t.description;
+      grouped[key] = (grouped[key] ?? 0.0) + t.amount;
+    }
+
+    final categories = grouped.entries.map((e) {
+      return InvestmentCategory(label: e.key, amount: e.value);
+    }).toList();
+
+    return Result.success(InvestmentSummary(
+      totalBalance: total,
+      categories: categories,
+    ));
   }
 
   @override
   Future<Result<ExpenseSummary, String>> getExpenseSummary() async {
-    return const Result.success(
-      ExpenseSummary(
-        totalBalance: 1000,
-        categories: [
-          InvestmentCategory(label: 'Lunch\nTeam outing', amount: 450),
-          InvestmentCategory(label: 'Transport\nTaxi fare', amount: 820),
-          InvestmentCategory(label: 'Supplies\nOffice stationery', amount: 300),
-        ],
-      ),
-    );
+    await _initIfNeeded();
+    final debits = _transactions!.where((t) => !t.isInvestment && t.type == TransactionType.debit).toList();
+    final total = debits.fold<double>(0, (sum, t) => sum + t.amount);
+
+    final Map<String, double> grouped = {};
+    for (final t in debits) {
+      final key = '${_categoryName(t.category)}\n${t.description}';
+      grouped[key] = (grouped[key] ?? 0.0) + t.amount;
+    }
+
+    final categories = grouped.entries.map((e) {
+      return InvestmentCategory(label: e.key, amount: e.value);
+    }).toList();
+
+    return Result.success(ExpenseSummary(
+      totalBalance: total,
+      categories: categories,
+    ));
+  }
+
+  String _categoryName(ExpenseCategory category) {
+    switch (category) {
+      case ExpenseCategory.food: return 'Food';
+      case ExpenseCategory.transport: return 'Transport';
+      case ExpenseCategory.gifts: return 'Gifts';
+      case ExpenseCategory.books: return 'Books';
+      case ExpenseCategory.clothes: return 'Clothes';
+      case ExpenseCategory.others: return 'Others';
+    }
   }
 }
 

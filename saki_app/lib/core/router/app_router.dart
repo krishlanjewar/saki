@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/calendar/presentation/screens/calendar_screen.dart';
 import '../../features/expense/presentation/screens/expense_screen.dart';
+import '../../features/goals/presentation/screens/goals_screen.dart';
 import '../../features/study_timer/presentation/screens/study_timer_screen.dart';
 import '../../shared/widgets/saki_scaffold.dart';
 
@@ -33,7 +34,7 @@ GoRouter appRouter(Ref ref) {
       ),
       GoRoute(
         path: '/goals',
-        builder: (context, state) => const _PlaceholderScreen(title: 'Goals'),
+        builder: (context, state) => const GoalsScreen(),
       ),
       GoRoute(
         path: '/period',

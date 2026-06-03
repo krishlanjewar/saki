@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CalendarEvent {
 
- String get id; String get title; DateTime get startTime; DateTime get endTime; String? get description; bool get isAllDay;
+ String get id; String get title; DateTime get startTime; DateTime get endTime; String? get description; bool get isAllDay; bool get isCompleted; String get category; double? get amount;
 /// Create a copy of CalendarEvent
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $CalendarEventCopyWith<CalendarEvent> get copyWith => _$CalendarEventCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarEvent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.description, description) || other.description == description)&&(identical(other.isAllDay, isAllDay) || other.isAllDay == isAllDay));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarEvent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.description, description) || other.description == description)&&(identical(other.isAllDay, isAllDay) || other.isAllDay == isAllDay)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.category, category) || other.category == category)&&(identical(other.amount, amount) || other.amount == amount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,startTime,endTime,description,isAllDay);
+int get hashCode => Object.hash(runtimeType,id,title,startTime,endTime,description,isAllDay,isCompleted,category,amount);
 
 @override
 String toString() {
-  return 'CalendarEvent(id: $id, title: $title, startTime: $startTime, endTime: $endTime, description: $description, isAllDay: $isAllDay)';
+  return 'CalendarEvent(id: $id, title: $title, startTime: $startTime, endTime: $endTime, description: $description, isAllDay: $isAllDay, isCompleted: $isCompleted, category: $category, amount: $amount)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $CalendarEventCopyWith<$Res>  {
   factory $CalendarEventCopyWith(CalendarEvent value, $Res Function(CalendarEvent) _then) = _$CalendarEventCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, DateTime startTime, DateTime endTime, String? description, bool isAllDay
+ String id, String title, DateTime startTime, DateTime endTime, String? description, bool isAllDay, bool isCompleted, String category, double? amount
 });
 
 
@@ -65,7 +65,7 @@ class _$CalendarEventCopyWithImpl<$Res>
 
 /// Create a copy of CalendarEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? startTime = null,Object? endTime = null,Object? description = freezed,Object? isAllDay = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? startTime = null,Object? endTime = null,Object? description = freezed,Object? isAllDay = null,Object? isCompleted = null,Object? category = null,Object? amount = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -73,7 +73,10 @@ as String,startTime: null == startTime ? _self.startTime : startTime // ignore: 
 as DateTime,endTime: null == endTime ? _self.endTime : endTime // ignore: cast_nullable_to_non_nullable
 as DateTime,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,isAllDay: null == isAllDay ? _self.isAllDay : isAllDay // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
+as bool,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as String,amount: freezed == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as double?,
   ));
 }
 
@@ -158,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  DateTime startTime,  DateTime endTime,  String? description,  bool isAllDay)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  DateTime startTime,  DateTime endTime,  String? description,  bool isAllDay,  bool isCompleted,  String category,  double? amount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CalendarEvent() when $default != null:
-return $default(_that.id,_that.title,_that.startTime,_that.endTime,_that.description,_that.isAllDay);case _:
+return $default(_that.id,_that.title,_that.startTime,_that.endTime,_that.description,_that.isAllDay,_that.isCompleted,_that.category,_that.amount);case _:
   return orElse();
 
 }
@@ -179,10 +182,10 @@ return $default(_that.id,_that.title,_that.startTime,_that.endTime,_that.descrip
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  DateTime startTime,  DateTime endTime,  String? description,  bool isAllDay)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  DateTime startTime,  DateTime endTime,  String? description,  bool isAllDay,  bool isCompleted,  String category,  double? amount)  $default,) {final _that = this;
 switch (_that) {
 case _CalendarEvent():
-return $default(_that.id,_that.title,_that.startTime,_that.endTime,_that.description,_that.isAllDay);case _:
+return $default(_that.id,_that.title,_that.startTime,_that.endTime,_that.description,_that.isAllDay,_that.isCompleted,_that.category,_that.amount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +202,10 @@ return $default(_that.id,_that.title,_that.startTime,_that.endTime,_that.descrip
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  DateTime startTime,  DateTime endTime,  String? description,  bool isAllDay)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  DateTime startTime,  DateTime endTime,  String? description,  bool isAllDay,  bool isCompleted,  String category,  double? amount)?  $default,) {final _that = this;
 switch (_that) {
 case _CalendarEvent() when $default != null:
-return $default(_that.id,_that.title,_that.startTime,_that.endTime,_that.description,_that.isAllDay);case _:
+return $default(_that.id,_that.title,_that.startTime,_that.endTime,_that.description,_that.isAllDay,_that.isCompleted,_that.category,_that.amount);case _:
   return null;
 
 }
@@ -214,7 +217,7 @@ return $default(_that.id,_that.title,_that.startTime,_that.endTime,_that.descrip
 @JsonSerializable()
 
 class _CalendarEvent extends CalendarEvent {
-  const _CalendarEvent({required this.id, required this.title, required this.startTime, required this.endTime, this.description, this.isAllDay = false}): super._();
+  const _CalendarEvent({required this.id, required this.title, required this.startTime, required this.endTime, this.description, this.isAllDay = false, this.isCompleted = false, this.category = 'plan', this.amount}): super._();
   factory _CalendarEvent.fromJson(Map<String, dynamic> json) => _$CalendarEventFromJson(json);
 
 @override final  String id;
@@ -223,6 +226,9 @@ class _CalendarEvent extends CalendarEvent {
 @override final  DateTime endTime;
 @override final  String? description;
 @override@JsonKey() final  bool isAllDay;
+@override@JsonKey() final  bool isCompleted;
+@override@JsonKey() final  String category;
+@override final  double? amount;
 
 /// Create a copy of CalendarEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -237,16 +243,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalendarEvent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.description, description) || other.description == description)&&(identical(other.isAllDay, isAllDay) || other.isAllDay == isAllDay));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalendarEvent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.description, description) || other.description == description)&&(identical(other.isAllDay, isAllDay) || other.isAllDay == isAllDay)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.category, category) || other.category == category)&&(identical(other.amount, amount) || other.amount == amount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,startTime,endTime,description,isAllDay);
+int get hashCode => Object.hash(runtimeType,id,title,startTime,endTime,description,isAllDay,isCompleted,category,amount);
 
 @override
 String toString() {
-  return 'CalendarEvent(id: $id, title: $title, startTime: $startTime, endTime: $endTime, description: $description, isAllDay: $isAllDay)';
+  return 'CalendarEvent(id: $id, title: $title, startTime: $startTime, endTime: $endTime, description: $description, isAllDay: $isAllDay, isCompleted: $isCompleted, category: $category, amount: $amount)';
 }
 
 
@@ -257,7 +263,7 @@ abstract mixin class _$CalendarEventCopyWith<$Res> implements $CalendarEventCopy
   factory _$CalendarEventCopyWith(_CalendarEvent value, $Res Function(_CalendarEvent) _then) = __$CalendarEventCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, DateTime startTime, DateTime endTime, String? description, bool isAllDay
+ String id, String title, DateTime startTime, DateTime endTime, String? description, bool isAllDay, bool isCompleted, String category, double? amount
 });
 
 
@@ -274,7 +280,7 @@ class __$CalendarEventCopyWithImpl<$Res>
 
 /// Create a copy of CalendarEvent
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? startTime = null,Object? endTime = null,Object? description = freezed,Object? isAllDay = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? startTime = null,Object? endTime = null,Object? description = freezed,Object? isAllDay = null,Object? isCompleted = null,Object? category = null,Object? amount = freezed,}) {
   return _then(_CalendarEvent(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -282,7 +288,10 @@ as String,startTime: null == startTime ? _self.startTime : startTime // ignore: 
 as DateTime,endTime: null == endTime ? _self.endTime : endTime // ignore: cast_nullable_to_non_nullable
 as DateTime,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,isAllDay: null == isAllDay ? _self.isAllDay : isAllDay // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
+as bool,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as String,amount: freezed == amount ? _self.amount : amount // ignore: cast_nullable_to_non_nullable
+as double?,
   ));
 }
 

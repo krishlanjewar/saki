@@ -15,6 +15,8 @@ _Transaction _$TransactionFromJson(Map<String, dynamic> json) => _Transaction(
   category:
       $enumDecodeNullable(_$ExpenseCategoryEnumMap, json['category']) ??
       ExpenseCategory.others,
+  isInvestment: json['isInvestment'] as bool? ?? false,
+  investmentCategory: json['investmentCategory'] as String?,
 );
 
 Map<String, dynamic> _$TransactionToJson(_Transaction instance) =>
@@ -25,6 +27,8 @@ Map<String, dynamic> _$TransactionToJson(_Transaction instance) =>
       'date': instance.date.toIso8601String(),
       'type': _$TransactionTypeEnumMap[instance.type]!,
       'category': _$ExpenseCategoryEnumMap[instance.category]!,
+      'isInvestment': instance.isInvestment,
+      'investmentCategory': instance.investmentCategory,
     };
 
 const _$TransactionTypeEnumMap = {

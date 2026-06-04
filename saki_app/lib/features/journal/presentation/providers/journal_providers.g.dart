@@ -33,7 +33,7 @@ final class JournalEntriesProvider
   JournalEntries create() => JournalEntries();
 }
 
-String _$journalEntriesHash() => r'8141ff7f49482c5420fede7a66690651b2d87e97';
+String _$journalEntriesHash() => r'8a7e181b9f73eb50bd8cbcedd4d728fb2f245f77';
 
 abstract class _$JournalEntries extends $AsyncNotifier<List<JournalEntry>> {
   FutureOr<List<JournalEntry>> build();
@@ -137,7 +137,40 @@ final class JournalStatsProvider
   }
 }
 
-String _$journalStatsHash() => r'1356b6aa5da2461b3b2812af4e8de323d50c9208';
+String _$journalStatsHash() => r'e5e21ba9ff5ecf034084a5908cda3a99156d7885';
+
+@ProviderFor(hasPinSet)
+final hasPinSetProvider = HasPinSetProvider._();
+
+final class HasPinSetProvider
+    extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
+    with $FutureModifier<bool>, $FutureProvider<bool> {
+  HasPinSetProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'hasPinSetProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$hasPinSetHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<bool> create(Ref ref) {
+    return hasPinSet(ref);
+  }
+}
+
+String _$hasPinSetHash() => r'25c25da1b906ebd386df69a3526089bd9c97f9f8';
 
 @ProviderFor(LocalAuth)
 final localAuthProvider = LocalAuthProvider._();
@@ -162,7 +195,7 @@ final class LocalAuthProvider extends $AsyncNotifierProvider<LocalAuth, bool> {
   LocalAuth create() => LocalAuth();
 }
 
-String _$localAuthHash() => r'548d7a82d50c260949eed61218f28e4b2192295a';
+String _$localAuthHash() => r'78fc15c9f699070381b0030442b796f7da6d320c';
 
 abstract class _$LocalAuth extends $AsyncNotifier<bool> {
   FutureOr<bool> build();

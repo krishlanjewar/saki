@@ -57,8 +57,8 @@ class MoodSelector extends StatelessWidget {
       case Mood.happy: return Colors.green;
       case Mood.calm: return Colors.blue;
       case Mood.excited: return Colors.orange;
-      case Mood.stressed: return Colors.red;
-      case Mood.sad: return Colors.indigo;
+      case Mood.stressed: return Colors.grey;
+      case Mood.sad: return Colors.red;
     }
   }
 }

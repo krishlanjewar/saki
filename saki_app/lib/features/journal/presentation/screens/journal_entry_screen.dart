@@ -6,6 +6,7 @@ import '../../domain/models/journal_entry.dart';
 import '../providers/journal_providers.dart';
 import '../../domain/services/reflection_prompts.dart';
 import '../widgets/mood_selector.dart';
+import '../widgets/glowing_prompt_icon.dart';
 
 class JournalEntryScreen extends ConsumerStatefulWidget {
   final String? entryId;
@@ -166,11 +167,11 @@ class _JournalEntryScreenState extends ConsumerState<JournalEntryScreen> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.lightbulb_outline),
+                    const GlowingPromptIcon(),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Prompt: $dailyPromptText',
+                        dailyPromptText,
                         style: const TextStyle(fontStyle: FontStyle.italic),
                       ),
                     ),

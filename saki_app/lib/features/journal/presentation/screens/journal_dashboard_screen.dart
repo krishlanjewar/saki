@@ -9,7 +9,9 @@ import '../widgets/github_streak_chart.dart';
 import '../../../../shared/widgets/saki_scaffold.dart';
 
 import '../providers/journal_providers.dart';
-
+import '../widgets/pin_entry_widget.dart';
+import '../widgets/mood_tracking_chart.dart';
+import '../../data/services/journal_auth_service.dart';
 class JournalDashboardScreen extends ConsumerStatefulWidget {
   const JournalDashboardScreen({super.key});
 
@@ -18,8 +20,12 @@ class JournalDashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _JournalDashboardScreenState extends ConsumerState<JournalDashboardScreen> {
-  bool _isAuthenticated = true;
-//  = false ;
+  bool _isAuthenticated = false;
+  bool _showPinSetup = false;
+  bool _showPinUnlock = false;
+  String? _pinError;
+  String? _setupPinFirstEntry;
+
   @override
   void initState() {
     super.initState();
@@ -35,24 +41,110 @@ class _JournalDashboardScreenState extends ConsumerState<JournalDashboardScreen>
     }
   }
 
+  Future<void> _handlePinComplete(String pin) async {
+    final hasPin = ref.read(hasPinSetProvider).value ?? false;
+    final authService = ref.read(journalAuthServiceProvider);
+
+    if (!hasPin) {
+      if (_setupPinFirstEntry == null) {
+        setState(() {
+          _setupPinFirstEntry = pin;
+          _pinError = null;
+        });
+      } else {
+        if (_setupPinFirstEntry == pin) {
+          await authService.setPin(pin);
+          ref.invalidate(hasPinSetProvider);
+          setState(() {
+            _isAuthenticated = true;
+            _setupPinFirstEntry = null;
+            _showPinSetup = false;
+          });
+          ref.read(localAuthProvider.notifier).unlockWithPin();
+        } else {
+          setState(() {
+            _pinError = 'PINs do not match. Try again.';
+            _setupPinFirstEntry = null;
+          });
+        }
+      }
+    } else {
+      final isValid = await authService.verifyPin(pin);
+      if (isValid) {
+        setState(() {
+          _isAuthenticated = true;
+          _showPinUnlock = false;
+          _pinError = null;
+        });
+        ref.read(localAuthProvider.notifier).unlockWithPin();
+      } else {
+        setState(() {
+          _pinError = 'Incorrect PIN';
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!_isAuthenticated) {
+      final hasPinAsync = ref.watch(hasPinSetProvider);
+
       return SakiScaffold(
         title: 'Journal',
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.lock_outline, size: 64, color: Colors.grey),
-              const SizedBox(height: 16),
-              const Text('Journal is locked'),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _authenticate,
-                child: const Text('Unlock'),
-              )
-            ],
+          child: hasPinAsync.when(
+            loading: () => const CircularProgressIndicator(),
+            error: (err, stack) => Text('Error: $err'),
+            data: (hasPin) {
+              if (_showPinSetup) {
+                return PinEntryWidget(
+                  title: _setupPinFirstEntry == null ? 'Set up Journal PIN' : 'Confirm Journal PIN',
+                  subtitle: _setupPinFirstEntry == null ? 'Create a 4-digit PIN' : 'Re-enter your PIN',
+                  errorText: _pinError,
+                  onComplete: _handlePinComplete,
+                );
+              }
+
+              if (_showPinUnlock) {
+                return PinEntryWidget(
+                  title: 'Unlock Journal',
+                  subtitle: 'Enter your 4-digit PIN',
+                  errorText: _pinError,
+                  onComplete: _handlePinComplete,
+                );
+              }
+
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.lock_outline, size: 64, color: Colors.grey),
+                  const SizedBox(height: 16),
+                  const Text('Journal is locked', style: TextStyle(fontSize: 20)),
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.fingerprint),
+                    onPressed: _authenticate,
+                    label: const Text('Unlock with Biometrics'),
+                  ),
+                  const SizedBox(height: 12),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        if (hasPin) {
+                          _showPinUnlock = true;
+                        } else {
+                          _showPinSetup = true;
+                        }
+                        _pinError = null;
+                        _setupPinFirstEntry = null;
+                      });
+                    },
+                    child: Text(hasPin ? 'Unlock with PIN' : 'Set up PIN'),
+                  )
+                ],
+              );
+            },
           ),
         ),
       );
@@ -89,10 +181,7 @@ class _JournalDashboardScreenState extends ConsumerState<JournalDashboardScreen>
                       if (entries.isNotEmpty) ...[
                         const Text('Mood Trends', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                         const SizedBox(height: 12),
-                        SizedBox(
-                          height: 200,
-                          child: _buildMoodChart(entries),
-                        ),
+                        MoodTrackingChart(entries: entries),
                         const SizedBox(height: 24),
                       ],
                       const Text('Recent Entries', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
@@ -159,46 +248,7 @@ class _JournalDashboardScreenState extends ConsumerState<JournalDashboardScreen>
     );
   }
 
-  Widget _buildMoodChart(List<JournalEntry> entries) {
-    // Simple mock of mood mapping to Y-axis for fl_chart
-    // 0 = sad, 1 = stressed, 2 = calm, 3 = happy, 4 = excited
-    Map<Mood, double> moodValues = {
-      Mood.sad: 0,
-      Mood.stressed: 1,
-      Mood.calm: 2,
-      Mood.happy: 3,
-      Mood.excited: 4,
-    };
 
-    final recentEntries = entries.toList()..sort((a, b) => a.date.compareTo(b.date));
-    final displayEntries = recentEntries.length > 7 ? recentEntries.sublist(recentEntries.length - 7) : recentEntries;
-
-    List<FlSpot> spots = [];
-    for (int i = 0; i < displayEntries.length; i++) {
-      spots.add(FlSpot(i.toDouble(), moodValues[displayEntries[i].mood]!));
-    }
-
-    return LineChart(
-      LineChartData(
-        gridData: const FlGridData(show: false),
-        titlesData: const FlTitlesData(
-          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        ),
-        borderData: FlBorderData(show: false),
-        lineBarsData: [
-          LineChartBarData(
-            spots: spots,
-            isCurved: true,
-            color: Theme.of(context).colorScheme.primary,
-            barWidth: 3,
-            dotData: const FlDotData(show: true),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildEntryCard(BuildContext context, JournalEntry entry) {
     return Card(

@@ -14,6 +14,7 @@ class ReflectionPrompts {
     "Who made a positive impact on your day?",
     "What is something you want to let go of?",
     "What made you feel proud today?",
+    "How was your day?",
   ];
 
   static String getPromptForToday() {

@@ -3,6 +3,7 @@ import 'package:local_auth/local_auth.dart';
 import '../../domain/models/journal_entry.dart';
 import '../../domain/models/journal_stats.dart';
 import '../../data/repositories/journal_repository.dart';
+import '../../data/services/journal_auth_service.dart';
 
 part 'journal_providers.g.dart';
 
@@ -61,13 +62,17 @@ JournalStats journalStats(Ref ref) {
 }
 
 @riverpod
+FutureOr<bool> hasPinSet(Ref ref) {
+  final authService = ref.watch(journalAuthServiceProvider);
+  return authService.hasPinSet();
+}
+
+@riverpod
 class LocalAuth extends _$LocalAuth {
   final LocalAuthentication auth = LocalAuthentication();
 
   @override
   FutureOr<bool> build() async {
-    // Initial state assumes not authenticated if biometrics are enabled in settings
-    // In a real app, this might check a shared preference if lock is enabled
     return false; // Default to locked, require authentication
   }
 
@@ -77,17 +82,23 @@ class LocalAuth extends _$LocalAuth {
       final canAuthenticate = canAuthenticateWithBiometrics || await auth.isDeviceSupported();
 
       if (!canAuthenticate) {
-        state = const AsyncData(true); // If device doesn't support it, just allow access
-        return true;
+        // Device doesn't support biometrics, rely on PIN
+        return false;
       }
 
       final didAuthenticate = await auth.authenticate(
         localizedReason: 'Please authenticate to access your Journal',
       );
-      state = AsyncData(didAuthenticate);
+      if (didAuthenticate) {
+        state = const AsyncData(true);
+      }
       return didAuthenticate;
     } catch (e) {
       return false;
     }
+  }
+
+  void unlockWithPin() {
+    state = const AsyncData(true);
   }
 }

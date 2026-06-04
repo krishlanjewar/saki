@@ -8,6 +8,7 @@ class JournalSearchDelegate extends SearchDelegate<JournalEntry?> {
 
   DateTime? _selectedDate;
   Mood? _selectedMood;
+  String? _selectedTag;
 
   final Map<Mood, String> _moodEmojis = {
     Mood.sad: '😢',
@@ -82,6 +83,12 @@ class JournalSearchDelegate extends SearchDelegate<JournalEntry?> {
             }
           }
 
+          if (_selectedTag != null) {
+            if (!entry.tags.contains(_selectedTag)) {
+              return false;
+            }
+          }
+
           if (lowerQuery.isEmpty) return true;
           
           final matchTitle = entry.title.toLowerCase().contains(lowerQuery);
@@ -147,6 +154,44 @@ class JournalSearchDelegate extends SearchDelegate<JournalEntry?> {
                                     },
                                   );
                                 }).toList(),
+                              )
+                            );
+                          }
+                        );
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  FilterChip(
+                    avatar: const Icon(Icons.tag, size: 16),
+                    label: Text(_selectedTag ?? 'Any Tag'),
+                    selected: _selectedTag != null,
+                    onSelected: (bool selected) {
+                      if (!selected) {
+                        setState(() => _selectedTag = null);
+                      } else {
+                        final allTags = entries.expand((e) => e.tags).toSet().toList()..sort();
+                        if (allTags.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No tags found in entries.')));
+                          return;
+                        }
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (ctx) {
+                            return SafeArea(
+                              child: SingleChildScrollView(
+                                child: Wrap(
+                                  children: allTags.map((tag) {
+                                    return ListTile(
+                                      leading: const Icon(Icons.local_offer_outlined),
+                                      title: Text(tag),
+                                      onTap: () {
+                                        Navigator.pop(ctx);
+                                        setState(() => _selectedTag = tag);
+                                      },
+                                    );
+                                  }).toList(),
+                                ),
                               )
                             );
                           }

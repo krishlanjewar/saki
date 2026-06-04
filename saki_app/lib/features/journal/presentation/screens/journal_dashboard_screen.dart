@@ -12,6 +12,7 @@ import '../providers/journal_providers.dart';
 import '../widgets/pin_entry_widget.dart';
 import '../widgets/mood_tracking_chart.dart';
 import '../../data/services/journal_auth_service.dart';
+import '../widgets/journal_search_delegate.dart';
 class JournalDashboardScreen extends ConsumerStatefulWidget {
   const JournalDashboardScreen({super.key});
 
@@ -155,6 +156,18 @@ class _JournalDashboardScreenState extends ConsumerState<JournalDashboardScreen>
 
     return SakiScaffold(
       title: 'Journal',
+      actions: [
+        if (entriesAsync.hasValue)
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: JournalSearchDelegate(entriesAsync.value ?? []),
+              );
+            },
+          ),
+      ],
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/journal/new'),
         icon: const Icon(Icons.edit),

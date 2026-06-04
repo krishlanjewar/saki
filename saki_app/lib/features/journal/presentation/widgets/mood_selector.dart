@@ -14,8 +14,8 @@ class MoodSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: Mood.values.map((mood) {
+      mainAxisAlignment: MainAxisAlignment.spaceAround,   
+      children: const [Mood.excited, Mood.happy, Mood.calm, Mood.stressed, Mood.sad].map((mood) {
         final isSelected = selectedMood == mood;
         return GestureDetector(
           onTap: () => onChanged(mood),
@@ -23,7 +23,9 @@ class MoodSelector extends StatelessWidget {
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: isSelected ? _getMoodColor(mood).withValues(alpha: 0.2) : Colors.transparent,
+              color: isSelected
+                  ? _getMoodColor(mood).withValues(alpha: 0.2)
+                  : Colors.transparent,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isSelected ? _getMoodColor(mood) : Colors.transparent,
@@ -32,9 +34,7 @@ class MoodSelector extends StatelessWidget {
             ),
             child: Text(
               _getMoodEmoji(mood),
-              style: TextStyle(
-                fontSize: isSelected ? 32 : 24,
-              ),
+              style: TextStyle(fontSize: isSelected ? 32 : 24),
             ),
           ),
         );
@@ -44,21 +44,31 @@ class MoodSelector extends StatelessWidget {
 
   String _getMoodEmoji(Mood mood) {
     switch (mood) {
-      case Mood.happy: return '😊';
-      case Mood.calm: return '😌';
-      case Mood.excited: return '🤩';
-      case Mood.stressed: return '😫';
-      case Mood.sad: return '😢';
+      case Mood.excited:
+        return '🤩';
+      case Mood.happy:
+        return '😊';
+      case Mood.calm:
+        return '😌';
+      case Mood.stressed:
+        return '😫';
+      case Mood.sad:
+        return '😢';
     }
   }
 
   Color _getMoodColor(Mood mood) {
     switch (mood) {
-      case Mood.happy: return Colors.green;
-      case Mood.calm: return Colors.blue;
-      case Mood.excited: return Colors.orange;
-      case Mood.stressed: return Colors.grey;
-      case Mood.sad: return Colors.red;
+      case Mood.happy:
+        return Colors.green;
+      case Mood.calm:
+        return Colors.blue;
+      case Mood.excited:
+        return Colors.orange;
+      case Mood.stressed:
+        return Colors.grey;
+      case Mood.sad:
+        return Colors.red;
     }
   }
 }

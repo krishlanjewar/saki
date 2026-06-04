@@ -197,6 +197,35 @@ class _JournalDashboardScreenState extends ConsumerState<JournalDashboardScreen>
                         MoodTrackingChart(entries: entries),
                         const SizedBox(height: 24),
                       ],
+                      
+                      Builder(
+                        builder: (context) {
+                          final starred = entries.where((e) => e.isFavorite).toList().reversed.toList();
+                          if (starred.isEmpty) return const SizedBox.shrink();
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Starred Entries', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                              const SizedBox(height: 12),
+                              SizedBox(
+                                height: 110,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: starred.length,
+                                  itemBuilder: (context, index) {
+                                    return SizedBox(
+                                      width: 250,
+                                      child: _buildEntryCard(context, starred[index], isCompact: true),
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                            ],
+                          );
+                        }
+                      ),
+
                       const Text('Recent Entries', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     ],
                   ),
@@ -263,19 +292,55 @@ class _JournalDashboardScreenState extends ConsumerState<JournalDashboardScreen>
 
 
 
-  Widget _buildEntryCard(BuildContext context, JournalEntry entry) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  Widget _buildEntryCard(BuildContext context, JournalEntry entry, {bool isCompact = false}) {
+    final card = Card(
+      margin: EdgeInsets.symmetric(horizontal: isCompact ? 8 : 16, vertical: 8),
       child: ListTile(
         title: Text(entry.title, style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text(
           entry.content,
-          maxLines: 2,
+          maxLines: isCompact ? 1 : 2,
           overflow: TextOverflow.ellipsis,
         ),
-        trailing: Text(DateFormat.MMMd().format(entry.date)),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: Icon(
+                entry.isFavorite ? Icons.star : Icons.star_border,
+                color: entry.isFavorite ? Colors.amber : null,
+              ),
+              onPressed: () {
+                ref.read(journalEntriesProvider.notifier).updateEntry(
+                      entry.copyWith(isFavorite: !entry.isFavorite),
+                    );
+              },
+            ),
+            if (!isCompact) Text(DateFormat.MMMd().format(entry.date)),
+          ],
+        ),
         onTap: () => context.push('/journal/entry/${entry.id}'),
       ),
+    );
+
+    if (isCompact) return card;
+
+    return Dismissible(
+      key: Key(entry.id),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20.0),
+        color: Colors.red,
+        child: const Icon(Icons.delete, color: Colors.white),
+      ),
+      onDismissed: (direction) {
+        ref.read(journalEntriesProvider.notifier).deleteEntry(entry.id);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Entry deleted')),
+        );
+      },
+      child: card,
     );
   }
 }
